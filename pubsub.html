@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JS异步-PubSub</title>
+  </head>
+  <body>
+
+    <script>
+    	function PubSub() {
+   			this.handlers = {};
+    	}
+
+    	//注册事件以及handler
+    	PubSub.prototype.on = function(eventType,handler) {
+    		/*如果注册的事件之前没有存在过，那么新添进去*/
+    		if (!(eventType in this.handlers)) {
+    			this.handlers[eventType] = [];
+    		}
+
+    		this.handlers[eventType].push(handler);
+    		return this;
+    	}
+
+    	//触发事件，遍历所有事件处理器
+    	PubSub.prototype.emit = function(eventType) {
+    		/*取到除了eventType之外的所有参数，并转换为数组*/
+    		var handlerArgs = Array.prototype.slice.call(arguments, 1);
+    		for(var i=0, len=this.handlers[eventType].length; i<len; i++) {
+    			//对这个eventType执行注册进去的handler
+    			this.handlers[eventType][i].apply(this, handlerArgs);
+    		}
+    		//返回这个对象
+    		return this;
+    	}
+
+    	var pubsub = new PubSub();
+    	pubsub.on('myEvent', function() {
+    		console.log('success!');
+    	})
+
+    	pubsub.emit('myEvent');
+    </script>
+  </body>
+</html>
