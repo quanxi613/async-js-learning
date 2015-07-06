@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JS异步-Promise</title>
+  </head>
+  <body>
+    <input type="text" id="playGame">
+    <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+    	/*假设用户按下Y和N键，我们对此做出提示，通过生成一个$.Deferred实例来代表用户的动作*/
+
+        var promptDeferred = new $.Deferred();
+        promptDeferred.always(function(){
+            console.log('a choice was made:');
+        });
+        promptDeferred.done(function() {
+            console.log('starting game...');
+        });
+        promptDeferred.fail(function() {
+            console.log('no game today')
+        });
+
+        //使用resolve和reject方法来触发上面的Deferred对象
+        $('#playGame').on('keyup', function(e) {
+            var Y = 89, N = 78;
+            if(e.keyCode === Y) {
+                promptDeferred.resolve();
+            }
+            else if(e.keyCode === N) {
+                promptDeferred.reject();
+            }
+            else {
+                return false;
+            }
+        });
+
+    </script>
+  </body>
+</html>
